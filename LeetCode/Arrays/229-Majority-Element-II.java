@@ -1,54 +1,37 @@
-// Problem: Majority Element II
-// LeetCode Link: https://leetcode.com/problems/majority-element-ii/
-// Difficulty: Medium
-// Topic: Arrays, Sorting
-//
-// Approach:
-// This solution leverages sorting to group identical elements together. After sorting, 
-// a single pass is performed to count the occurrences of each unique element. 
-// If an element's count exceeds n/3 (where n is the array length), it is added to the result list. 
-// A final check after the loop ensures the last element's count is also considered.
-//
-// Time Complexity: O(n log n)
-// This is dominated by the time complexity of the sorting algorithm (Arrays.sort in Java).
-// The single pass afterward takes O(n).
-//
-// Space Complexity: O(1) (Excluding the output list)
-// The space used is minimal, primarily for the 'list' and local variables.
-
 class Solution {
     public List<Integer> majorityElement(int[] nums) {
-        // Handle edge case of empty array
-        if (nums == null || nums.length == 0) {
-            return new ArrayList<>();
-        }
+        int n = nums.length;
+        int cnt1 = 0, cnt2 = 0;
+        int el1 = Integer.MIN_VALUE, el2 = Integer.MIN_VALUE;
 
-        Arrays.sort(nums);
-        List<Integer> list = new ArrayList<>();
-        int count = 1;
-        int prev = nums[0];
-        // Calculate the threshold: elements must appear > n/3 times
-        int n = nums.length / 3;
-        
-        for (int i = 1; i < nums.length; i++) {
-            if (nums[i] == prev) {
-                count++;
+        for (int i = 0; i < n; i++) {
+            if (cnt1 == 0 && el2 != nums[i]) {
+                cnt1 = 1;
+                el1 = nums[i]; 
+            } else if (cnt2 == 0 && el1 != nums[i]) {
+                cnt2 = 1;
+                el2 = nums[i]; 
+            } else if (nums[i] == el1) {
+                cnt1++;
+            } else if (nums[i] == el2) {
+                cnt2++; 
             } else {
-                // Check if the previous element met the majority threshold
-                if (count > n) {
-                    list.add(prev);
-                }
-                // Reset count for the new element
-                count = 1;
-                prev = nums[i]; // Update the previous element
+                cnt1--; 
+                cnt2--;
             }
         }
-        
-        // Final check for the last element in the array
-        if (count > n) {
-            list.add(prev);
+
+        cnt1 = 0; cnt2 = 0; 
+        for (int i = 0; i < n; i++) {
+            if (nums[i] == el1) cnt1++; 
+            if (nums[i] == el2) cnt2++;
         }
-        
-        return list;
+
+        int mini = n / 3 + 1;
+        List<Integer> result = new ArrayList<>(); 
+        if (cnt1 >= mini) result.add(el1);
+        if (cnt2 >= mini && el1 != el2) result.add(el2);
+
+        return result;
     }
 }
