@@ -11,7 +11,7 @@ class Solution {
         int ans = -1;
         while(left<=right){
             int mid = left + (right-left)/2;
-            int totalHoursToEatAll = canEatAll(mid,piles); 
+            int totalHoursToEatAll = canEatAll(mid,piles);
             if(totalHoursToEatAll<=h){
                 ans = mid;
                 right = mid-1;
